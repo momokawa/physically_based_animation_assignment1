@@ -46,7 +46,7 @@ def circles_collide_check_and_move(circles, circle_num, time_step):
     for i in range(circle_num):
         for j in range(i+1, circle_num):
             if circles[i].is_collide_with_other_circle(circles[j]):
-                print("hit")
+                """ if there is collision, update velocity """
                 distance = circles[i].velocity.distance(circles[j].velocity)
                 n_x = ( circles[j].velocity.x - circles[i].velocity.x) / (distance + 1e-7)
                 n_y =  ( circles[j].velocity.y - circles[i].velocity.y) / (distance + 1e07)
@@ -57,14 +57,6 @@ def circles_collide_check_and_move(circles, circle_num, time_step):
                 circles[i].velocity.y = circles[i].velocity.y - p * circles[i].mass * n_y
                 circles[j].velocity.x = circles[j].velocity.x - p * circles[j].mass * n_x
                 circles[j].velocity.y = circles[j].velocity.y - p * circles[j].mass * n_y
-
-
-def _calc_k_for_collide_with_other_circle(circle_1, circle_2):
-    """ calc vector to be used for Force-based response when colliding with other circle """
-    distance = circle_1.velocity.distance(circle_2.velocity)
-    temp =  1.0 / ( distance + 1e-7 ) # 1e-7: 0でわらない対策
-    k_vec = temp * ( circle_1.velocity - circle_2.velocity)
-    return k_vec
 
 
 """ setup """
@@ -95,6 +87,9 @@ for i in range(circle_num):
     mass = 1.0 # [kg]
     circle = Circle(radius = radius, initial_center = pos, initial_velocity = vel, mass = mass) # setup
     circles.append(circle) # add one more circles
+
+
+"""" ============ THIS PART IS MAIN PART ============ """
 
 """ Move circles """
 for i in range(int(duration/time_step)):
