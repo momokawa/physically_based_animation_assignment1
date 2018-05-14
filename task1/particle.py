@@ -1,5 +1,5 @@
-import math
 import copy
+import numpy as np
 
 class Particle2D:
     """ A Particle class for 2D """
@@ -78,4 +78,4 @@ class Vector2D:
         dx = self.x - other.x
         dy = self.y - other.y
         dist = dx**2 + dy**2
-        return math.sqrt(dist)
+        return np.sqrt(dist)
