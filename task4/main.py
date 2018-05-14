@@ -2,11 +2,11 @@
 this program does collision circles program
 - Assumption
 1. the number of circles:
-2. the velocity of circles: 0~10
-3. the center position of circles: 0~10
-4. the radius of circles: 0~5
+2. the velocity of circles: ~
+3. the center position of circles: ~
+4. the radius of circles: ~
 5. No force to be added
-6. background wall size 1000 x 1000
+6. background wall size 100 x 100
 7. perfect elastic collision
 """
 
@@ -44,33 +44,26 @@ def wall_collide_check_and_move(circles, circle_num, wall):
 def circles_collide_check_and_move(circles, circle_num, time_step):
     """ check whether each circle collide with other circles, and if true, bound them """
     for i in range(circle_num):
-        for j in range(circle_num - 1, i, -1):
+        for j in range(i+1, circle_num):
             if circles[i].is_collide_with_other_circle(circles[j]):
-                # calculate k_vec
-                k_vec = _calc_k_for_collide_with_other_circle(circles[i], circles[j])
-                a_val = (1.0/circles[i].mass + 1.0 / circles[j].mass)* 2 * ( k_vec * ( circles[i].velocity - circles[j].velocity))
+                print("hit")
+                distance = circles[i].velocity.distance(circles[j].velocity)
+                n_x = ( circles[j].velocity.x - circles[i].velocity.x) / (distance + 1e-7)
+                n_y =  ( circles[j].velocity.y - circles[i].velocity.y) / (distance + 1e07)
+                p = 2.0 * ( circles[i].velocity.x * n_x + circles[i].velocity.y * n_y - circles[i].velocity.x * n_x - circles[j].velocity.y * n_y ) / ( circles[i].mass + circles[j].mass)
 
                 # update Velocity
-                    """
-                        the calculation of Force-based response is like below
-                        v1_after = v1_before - ( a/m1 )*k_vec
-                        v2_after = v2_before - ( a/m2 )*k_vec
-                    """
-                circles[i].velocity = circles[i].velocity - ( a_val / circles[i].mass )* k_vec
-                circles[j].velocity = circles[j].velocity - ( a_val / circles[j].mass )* k_vec
+                circles[i].velocity.x = circles[i].velocity.x - p * circles[i].mass * n_x
+                circles[i].velocity.y = circles[i].velocity.y - p * circles[i].mass * n_y
+                circles[j].velocity.x = circles[j].velocity.x - p * circles[j].mass * n_x
+                circles[j].velocity.y = circles[j].velocity.y - p * circles[j].mass * n_y
 
-                # update center position
-                    """
-                        the calculation of center position is like below
-                        center_pos_new = center_pos_now  +  time_step*velocity
-                    """
-                circles[i].center_pos = circles[i].center_pos + time_step*circles[i].velocity
-                circles[j].center_pos = circles[j].center_pos + time_step*circles[j].velocity
 
 def _calc_k_for_collide_with_other_circle(circle_1, circle_2):
     """ calc vector to be used for Force-based response when colliding with other circle """
-    distance = circle_1.velocity.distance(circle_2)
-    k_vec = (1.0 / distance ) * ( circle_1.velocity - circle_2.velocity)
+    distance = circle_1.velocity.distance(circle_2.velocity)
+    temp =  1.0 / ( distance + 1e-7 ) # 1e-7: 0でわらない対策
+    k_vec = temp * ( circle_1.velocity - circle_2.velocity)
     return k_vec
 
 
@@ -91,14 +84,14 @@ ax.set_ylim([0,100])
 ims = [] # array to store each image flame
 # Set up formatting for the movie files
 Writer = animation.writers['ffmpeg']
-writer = Writer(fps=int(1.0/time_step), metadata=dict(artist='Mmoko'), bitrate=1800)
+writer = Writer(fps=int(1.0/time_step), metadata=dict(artist='Momoko'), bitrate=1800)
 
 """ generate random circles """
 for i in range(circle_num):
     # generate random velocity and position
-    vel = Vector2D(np.random.randint(10), np.random.randint(10)) # generate 0~100 int randomly
-    pos = Vector2D(np.random.randint(100), np.random.randint(100))
-    radius = np.random.randint(20) # generate 0~20 int randomly for radius
+    vel = Vector2D(np.random.randint(1,50), np.random.randint(1,50)) # generate 10~50 int randomly
+    pos = Vector2D(np.random.randint(10, 100), np.random.randint(10, 100))
+    radius = np.random.randint(10,15) # generate 0~20 int randomly for radius
     mass = 1.0 # [kg]
     circle = Circle(radius = radius, initial_center = pos, initial_velocity = vel, mass = mass) # setup
     circles.append(circle) # add one more circles

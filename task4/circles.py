@@ -1,4 +1,5 @@
 """ difinision for circle """
+import numpy as np
 
 class Circle:
         """ Circle class """
@@ -48,7 +49,7 @@ class Circle:
         def is_collide_with_other_circle(self, other):
             """  Check whether it is colliding with the other circle """
             distance_center = self.center_pos.distance(other.center_pos)
-            radius_sum = abs(self.radius - other.radius)
+            radius_sum = self.radius + other.radius
 
             if distance_center <= radius_sum:
                 return True
@@ -103,7 +104,7 @@ class Vector2D:
         dx = self.x - other.x
         dy = self.y - other.y
         dist = dx**2 + dy**2
-        return math.sqrt(dist)
+        return np.sqrt(dist)
 
 class Wall:
     """ Define background wall """
