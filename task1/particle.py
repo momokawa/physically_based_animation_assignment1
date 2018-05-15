@@ -28,7 +28,6 @@ class Particle2D:
         # keep current value and previous value
         current_position = copy.deepcopy(self.position)
         previous_position = copy.deepcopy(self.previous_position)
-        print('b_', previous_position.y, current_position.y)
 
         # substitute current_position to self.previous_position
         self.previous_position = current_position
@@ -39,8 +38,6 @@ class Particle2D:
 
         self.position.x = new_position_x
         self.position.y = new_position_y
-
-        print('A_', current_position.y, new_position_y, '\n')
 
 
     def update_based_on_wire(self, radius, center_pos):
