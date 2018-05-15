@@ -1,10 +1,11 @@
+""" The particle moves along with the straigt wire """
+
 import sys, os
-sys.path.append(os.pardir)
-from task1.particle import Particle2D, Vector2D
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from particle import Particle
 
-# initial setup
+""" initial setup """
 radius = 0.3 # [m]
 initial_pos = Vector2D(radius, 0.0) # [m]
 initial_vel = Vector2D(0.0, 0.0) # [m/s] # free fall
@@ -14,6 +15,7 @@ time_step = 0.1 # sec # 100msdc
 duration = 15.0 # sec
 center_pos = Vector2D(0.0, 0.0)
 
+""" setup for movie """
 # generate a particle
 particle_1 = Particle2D(position=initial_pos, velocity=initial_vel, force = force, mass=mass, time_step=time_step)
 iteration = int(duration/time_step)
