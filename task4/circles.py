@@ -10,14 +10,6 @@ class Circle:
             self.velocity = initial_velocity
             self.mass = mass
 
-        def is_collide_with_other(self, other_circle): # standard way to calc collision checking
-            distance = other_circle.center_pos.distance(self.center_pos) # calculate distance between each circle's center
-
-            if distance <= other_circle.radius + self.radius: # if collide
-                return True
-            else:
-                return False
-
         def is_collide_with_right_wall(self, wall):
             """ collide with right wall """
             if wall.width - self.center_pos.x < self.radius:

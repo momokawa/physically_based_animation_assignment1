@@ -49,14 +49,14 @@ def circles_collide_check_and_move(circles, circle_num, time_step):
                 """ if there is collision, update velocity """
                 distance = circles[i].velocity.distance(circles[j].velocity)
                 n_x = ( circles[j].velocity.x - circles[i].velocity.x) / (distance + 1e-7)
-                n_y =  ( circles[j].velocity.y - circles[i].velocity.y) / (distance + 1e07)
-                p = 2.0 * ( circles[i].velocity.x * n_x + circles[i].velocity.y * n_y - circles[i].velocity.x * n_x - circles[j].velocity.y * n_y ) / ( circles[i].mass + circles[j].mass)
+                n_y =  ( circles[j].velocity.y - circles[i].velocity.y) / (distance + 1e-7)
+                p = 2.0 * ( circles[i].velocity.x * n_x + circles[i].velocity.y * n_y - circles[j].velocity.x * n_x - circles[j].velocity.y * n_y ) / ( circles[i].mass + circles[j].mass)
 
                 # update Velocity
                 circles[i].velocity.x = circles[i].velocity.x - p * circles[i].mass * n_x
                 circles[i].velocity.y = circles[i].velocity.y - p * circles[i].mass * n_y
-                circles[j].velocity.x = circles[j].velocity.x - p * circles[j].mass * n_x
-                circles[j].velocity.y = circles[j].velocity.y - p * circles[j].mass * n_y
+                circles[j].velocity.x = circles[j].velocity.x + p * circles[j].mass * n_x
+                circles[j].velocity.y = circles[j].velocity.y + p * circles[j].mass * n_y
 
 
 """ setup """
@@ -73,6 +73,7 @@ wall = Wall(width = 100, height= 100)
 fig, ax = plt.subplots()
 ax.set_xlim([0,100]) # axis setting
 ax.set_ylim([0,100])
+plt.rcParams["legend.markerscale"] = 0.3 # scale the marker
 ims = [] # array to store each image flame
 # Set up formatting for the movie files
 Writer = animation.writers['ffmpeg']
@@ -83,7 +84,7 @@ for i in range(circle_num):
     # generate random velocity and position
     vel = Vector2D(np.random.randint(1,50), np.random.randint(1,50)) # generate 10~50 int randomly
     pos = Vector2D(np.random.randint(10, 100), np.random.randint(10, 100))
-    radius = np.random.randint(10,15) # generate 0~20 int randomly for radius
+    radius = 10.0
     mass = 1.0 # [kg]
     circle = Circle(radius = radius, initial_center = pos, initial_velocity = vel, mass = mass) # setup
     circles.append(circle) # add one more circles
@@ -105,17 +106,6 @@ for i in range(int(duration/time_step)):
     circles_collide_check_and_move(circles, circle_num, time_step)
 
     # create array to sotre circles center_pos and radius
-    """ 円の大きさを含めて表示するための編集　# TODO あとでやる
-    drawing_circles = [] # the array to store Circle object
-    for j in range(circle_num):
-        xy = (circles[j].center_pos.x, circles[j].center_pos.y)
-        drawing_circle =  plt.Circle(xy, radius = circles[j].radius, color='r')
-        drawing_circles.append(drawing_circle)
-
-    im = plt.imshow(drawing_circles)
-    ims.append([im])
-    """
-
     circle_center_x = []
     circle_center_y = []
     circle_radius = []
@@ -125,7 +115,7 @@ for i in range(int(duration/time_step)):
         circle_radius.append(circles[j].radius)
 
     # plot circles
-    im = ax.scatter(circle_center_x, circle_center_y, s = circle_radius) # generate new image
+    im = ax.scatter(circle_center_x, circle_center_y, s = circle_radius*10) # generate new image
     ims.append([im]) # add new image to ims array
 
 

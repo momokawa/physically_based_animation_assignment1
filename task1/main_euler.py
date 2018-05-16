@@ -21,6 +21,7 @@ ims = [] # array to store each image flame
 Writer = animation.writers['ffmpeg']
 writer = Writer(fps=10, metadata=dict(artist='Mmoko'), bitrate=1800)
 
+""" ==== THIS IS MAIN PART ===== """
 # calculate using euler method
 for i in range(iteration):
     particle_1.update_euler() # update position and velocity
